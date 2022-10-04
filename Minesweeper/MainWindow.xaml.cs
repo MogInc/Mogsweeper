@@ -20,11 +20,14 @@ namespace Minesweeper {
     /// </summary>
     public partial class MainWindow : Window {
         private int gridSize = 9;
+        private int mineAmount = 10;
+        private bool[,] gridMines;
         public MainWindow() {
             InitializeComponent();
-            test();
+            MakeGrid();
+            CalculateMines();
         }
-        private void test() {
+        private void MakeGrid() {
             for (int i = 0; i < gridSize; i++) {
                 var column = new ColumnDefinition();
                 column.Width = new GridLength(1, GridUnitType.Star);
@@ -36,11 +39,38 @@ namespace Minesweeper {
                 for (int j = 0; j < gridSize; j++) {
                     var button = new Button();
                     button.Content = "Snide Inc.";
+                    button.Name = $"a{i}e{j}";
+                    button.Click += new RoutedEventHandler(buttonClick);
                     Grid.SetColumn(button, i);
                     Grid.SetRow(button, j);
                     MainGrid.Children.Add(button);
                 }
+            }    
+        }
+        private void CalculateMines() {
+            gridMines = new bool[gridSize, gridSize];
+            Random random = new Random();
+            for (int i = 0; i < mineAmount; i++) {
+                var x = random.Next(gridSize);
+                var y = random.Next(gridSize);
+                if (gridMines[x, y]) {
+                    i--;
+                    continue;
+                } else {
+                    gridMines[x, y] = true;
+                }
             }
+            MessageBox.Show("");
+        }
+
+        private void buttonClick(object sender, EventArgs e) {
+            //do something or...
+            Button clicked = (Button)sender;
+            var coord = clicked.Name.Substring(1).Split('e').Select(int.Parse).ToList();
+
+
+
+            MessageBox.Show($"x: {coord[0]} | y: {coord[1]}");
         }
     }
 }
