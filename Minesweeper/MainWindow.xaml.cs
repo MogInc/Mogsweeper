@@ -20,8 +20,8 @@ namespace Minesweeper {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private int gridSize = 9;
-        private int mineAmount = 10;
+        private int gridSize = 2;
+        private int mineAmount = 1;
         private bool[,] gridMines;
         public MainWindow() {
             InitializeComponent();
@@ -41,6 +41,8 @@ namespace Minesweeper {
                     button.Content = "Snide Inc.";
                     button.Name = $"a{i}e{j}";
                     button.Click += new RoutedEventHandler(buttonClick);
+                    //TODO rightclick to plant flag
+                    //TODO prevent where first click is bomb
                     Grid.SetColumn(button, i);
                     Grid.SetRow(button, j);
                     MainGrid.Children.Add(button);
@@ -61,6 +63,11 @@ namespace Minesweeper {
                 }
             }
         }
+
+        private void ClearArea(int x, int y) { 
+            
+        }
+
         private void StartGame() {
             MakeGrid();
             CalculateMines();
@@ -82,10 +89,11 @@ namespace Minesweeper {
             if (gridMines[coord[0],coord[1]]) {
                 EndGame(0);
             }
+            gridMines[coord[0], coord[1]] = true;
             bool b = true;
             foreach (var item in gridMines) {
                 //b = item ? false : true;
-                if (item) {
+                if (!item) {
                     b = false;
                     break;
                 }
@@ -94,14 +102,13 @@ namespace Minesweeper {
                 EndGame(1);
             }
 
-            gridMines[coord[0], coord[1]] = false;
+            
             clicked.Content = "Clicked";
             clicked.IsEnabled = false;
-
+            ClearArea(coord[0], coord[1]);
 
 
             //MessageBox.Show($"x: {coord[0]} | y: {coord[1]}");
         }
-
     }
 }
