@@ -24,8 +24,7 @@ namespace Minesweeper {
         private bool[,] gridMines;
         public MainWindow() {
             InitializeComponent();
-            MakeGrid();
-            CalculateMines();
+            StartGame();
         }
         private void MakeGrid() {
             for (int i = 0; i < gridSize; i++) {
@@ -60,17 +59,25 @@ namespace Minesweeper {
                     gridMines[x, y] = true;
                 }
             }
-            MessageBox.Show("");
+        }
+        private void StartGame() {
+            MakeGrid();
+            CalculateMines();
+        }
+        private void GameOver() {
+            MessageBox.Show("EH OH");
         }
 
         private void buttonClick(object sender, EventArgs e) {
-            //do something or...
             Button clicked = (Button)sender;
             var coord = clicked.Name.Substring(1).Split('e').Select(int.Parse).ToList();
-
+            if (gridMines[coord[0],coord[1]]) {
+                GameOver();
+            }
 
 
             MessageBox.Show($"x: {coord[0]} | y: {coord[1]}");
         }
+
     }
 }
