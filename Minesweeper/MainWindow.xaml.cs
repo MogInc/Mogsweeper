@@ -20,8 +20,12 @@ namespace Minesweeper {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private int gridSize = 2;
-        private int mineAmount = 1;
+        private int gridSize = 4;
+        private int mineAmount = 0;
+        //gridMines
+        //m - mine
+        //c - clear
+        // - default
         private char[,] gridMines;
         public MainWindow() {
             InitializeComponent();
@@ -64,8 +68,16 @@ namespace Minesweeper {
             }
         }
 
-        private void ClearArea(int x, int y) { 
-            
+        private void ClearArea(int x, int y) {
+            var xBoxMin = x <= 0 ? 0 : 1;
+            var xBoxMax = x >= gridSize-1 ? 0 : 1;
+            var yBoxMin = y <= 0 ? 0 : 1;
+            var yBoxMax = y >= gridSize-1 ? 0 : 1;
+            for (int i = x - xBoxMin; i <= x + xBoxMax; i++) {
+                for (int j = y - yBoxMin; j <= y + yBoxMax; j++) {
+                    MessageBox.Show($"{i} {j}");
+                }
+            }
         }
 
         private void StartGame() {
