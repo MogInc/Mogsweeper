@@ -22,7 +22,7 @@ namespace Minesweeper {
     public partial class MainWindow : Window {
         private int gridSize = 2;
         private int mineAmount = 1;
-        private bool[,] gridMines;
+        private char[,] gridMines;
         public MainWindow() {
             InitializeComponent();
             StartGame();
@@ -50,16 +50,16 @@ namespace Minesweeper {
             }    
         }
         private void CalculateMines() {
-            gridMines = new bool[gridSize, gridSize];
+            gridMines = new char[gridSize, gridSize];
             Random random = new Random();
             for (int i = 0; i < mineAmount; i++) {
                 var x = random.Next(gridSize);
                 var y = random.Next(gridSize);
-                if (gridMines[x, y]) {
+                if (gridMines[x, y].Equals('m')) {
                     i--;
                     continue;
                 } else {
-                    gridMines[x, y] = true;
+                    gridMines[x, y] = 'm';
                 }
             }
         }
@@ -86,14 +86,14 @@ namespace Minesweeper {
         private void buttonClick(object sender, EventArgs e) {
             Button clicked = (Button)sender;
             var coord = clicked.Name.Substring(1).Split('e').Select(int.Parse).ToList();
-            if (gridMines[coord[0],coord[1]]) {
+            if (gridMines[coord[0],coord[1]].Equals('m')) {
                 EndGame(0);
             }
-            gridMines[coord[0], coord[1]] = true;
+            gridMines[coord[0], coord[1]] = 'c';
             bool b = true;
             foreach (var item in gridMines) {
                 //b = item ? false : true;
-                if (!item) {
+                if (!item.Equals('c') && !item.Equals('m')) {
                     b = false;
                     break;
                 }
