@@ -20,8 +20,8 @@ namespace Minesweeper {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private int gridSize = 4;
-        private int mineAmount = 0;
+        private int gridSize = 2;
+        private int mineAmount = 1;
         //gridMines
         //m - mine
         //c - clear
@@ -40,6 +40,10 @@ namespace Minesweeper {
                 var row = new RowDefinition();
                 row.Height = new GridLength(1, GridUnitType.Star);
                 MainGrid.RowDefinitions.Add(row);
+            }    
+        }
+        private void AddButtons() {
+            for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
                     var button = new Button();
                     button.Content = "Snide Inc.";
@@ -51,7 +55,7 @@ namespace Minesweeper {
                     Grid.SetRow(button, j);
                     MainGrid.Children.Add(button);
                 }
-            }    
+            }
         }
         private void CalculateMines() {
             gridMines = new char[gridSize, gridSize];
@@ -83,6 +87,12 @@ namespace Minesweeper {
 
         private void StartGame() {
             MakeGrid();
+            AddButtons();
+            CalculateMines();
+        }
+        private void Restart() {
+            MainGrid.Children.Clear();
+            AddButtons();
             CalculateMines();
         }
         private void EndGame(int gId) {
@@ -94,6 +104,7 @@ namespace Minesweeper {
                     MessageBox.Show("Gz u won");
                     break;
             }
+            Restart();
         }
 
         private void buttonClick(object sender, EventArgs e) {
