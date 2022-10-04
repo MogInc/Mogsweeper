@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,19 +65,42 @@ namespace Minesweeper {
             MakeGrid();
             CalculateMines();
         }
-        private void GameOver() {
-            MessageBox.Show("EH OH");
+        private void EndGame(int gId) {
+            switch (gId) {
+                case 0:
+                    MessageBox.Show("EH OH");
+                    break;
+                case 1:
+                    MessageBox.Show("Gz u won");
+                    break;
+            }
         }
 
         private void buttonClick(object sender, EventArgs e) {
             Button clicked = (Button)sender;
             var coord = clicked.Name.Substring(1).Split('e').Select(int.Parse).ToList();
             if (gridMines[coord[0],coord[1]]) {
-                GameOver();
+                EndGame(0);
+            }
+            bool b = true;
+            foreach (var item in gridMines) {
+                //b = item ? false : true;
+                if (item) {
+                    b = false;
+                    break;
+                }
+            }
+            if (b) {
+                EndGame(1);
             }
 
+            gridMines[coord[0], coord[1]] = false;
+            clicked.Content = "Clicked";
+            clicked.IsEnabled = false;
 
-            MessageBox.Show($"x: {coord[0]} | y: {coord[1]}");
+
+
+            //MessageBox.Show($"x: {coord[0]} | y: {coord[1]}");
         }
 
     }
