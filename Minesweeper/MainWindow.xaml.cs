@@ -76,6 +76,7 @@ namespace Minesweeper {
             for (int i = x - xBoxMin; i <= x + xBoxMax; i++) {
                 for (int j = y - yBoxMin; j <= y + yBoxMax; j++) {
                     MessageBox.Show($"{i} {j}");
+                    //now how the fuck do i disable them
                 }
             }
         }
