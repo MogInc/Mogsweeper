@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -79,8 +80,11 @@ namespace Minesweeper {
             var yBoxMax = y >= gridSize-1 ? 0 : 1;
             for (int i = x - xBoxMin; i <= x + xBoxMax; i++) {
                 for (int j = y - yBoxMin; j <= y + yBoxMax; j++) {
-                    MessageBox.Show($"{i} {j}");
+                    //MessageBox.Show($"{i} {j}");
                     //now how the fuck do i disable them
+                    var myTextBlock = MainGrid.Children.OfType<Button>;
+                    MessageBox.Show(myTextBlock.ToString());
+
                 }
             }
         }
@@ -113,6 +117,9 @@ namespace Minesweeper {
                 }
             }
             return true;
+        }
+        private void MoveMine() { 
+            
         }
         private void buttonClick(object sender, EventArgs e) {
             Button clicked = (Button)sender;
