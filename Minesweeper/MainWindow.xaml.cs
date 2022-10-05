@@ -106,7 +106,14 @@ namespace Minesweeper {
             }
             Restart();
         }
-
+        private bool CheckIfMinesLeft() {
+            foreach (var item in gridMines) {               
+                if (!item.Equals('c') && !item.Equals('m')) {
+                    return false;
+                }
+            }
+            return true;
+        }
         private void buttonClick(object sender, EventArgs e) {
             Button clicked = (Button)sender;
             var coord = clicked.Name.Substring(1).Split('e').Select(int.Parse).ToList();
@@ -114,15 +121,8 @@ namespace Minesweeper {
                 EndGame(0);
             }
             gridMines[coord[0], coord[1]] = 'c';
-            bool b = true;
-            foreach (var item in gridMines) {
-                //b = item ? false : true;
-                if (!item.Equals('c') && !item.Equals('m')) {
-                    b = false;
-                    break;
-                }
-            }
-            if (b) {
+
+            if (CheckIfMinesLeft()) {
                 EndGame(1);
             }
 
