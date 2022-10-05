@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Name="MainGrid">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Frame  Grid.Column="0" Grid.ColumnSpan="4" x:Name="headerFrame" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Center" Source="Header.xaml"/>
+        <Grid Grid.Row="1" Name="MainGrid" Margin="5,5,5,5">
+        </Grid>
     </Grid>
+
 </Window>
