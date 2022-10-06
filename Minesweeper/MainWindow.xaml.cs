@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Minesweeper {
@@ -48,7 +49,7 @@ namespace Minesweeper {
                 for (int j = 0; j < gridSize; j++) {
                     var button = new Button();
                     button.Content = "Snide Inc.";
-                    button.Name = $"a{i}e{j}";
+                    button.Name = $"x{i}y{j}";
                     button.Click += new RoutedEventHandler(buttonClick);
                     //TODO rightclick to plant flag
                     //TODO prevent where first click is bomb
@@ -73,22 +74,33 @@ namespace Minesweeper {
             }
         }
 
-        private void ClearArea(int x, int y) {
+        private List<string> CalcArea(int x, int y) {
             var xBoxMin = x <= 0 ? 0 : 1;
             var xBoxMax = x >= gridSize-1 ? 0 : 1;
             var yBoxMin = y <= 0 ? 0 : 1;
-            var yBoxMax = y >= gridSize-1 ? 0 : 1;
+            var yBoxMax = y >= gridSize-1 ? 0 : 1;          
+            List<string> buttonNames = new List<string>();
             for (int i = x - xBoxMin; i <= x + xBoxMax; i++) {
                 for (int j = y - yBoxMin; j <= y + yBoxMax; j++) {
-                    //MessageBox.Show($"{i} {j}");
-                    //now how the fuck do i disable them
-                    var myTextBlock = MainGrid.Children.OfType<Button>;
-                    MessageBox.Show(myTextBlock.ToString());
-
+                    if (gridMines[i, j].Equals('m')) {
+                        return buttonNames;
+                    }
+                    buttonNames.Add($"x{i}y{j}");
+                }
+            }
+            return buttonNames;
+        }
+        public void ClearArea(List<string> buttonNames) {
+            var test = MainGrid.Children.OfType<Button>();           
+            foreach (var button in test) {
+                if (buttonNames.Contains(button.Name)) {
+                    var coord = button.Name.Substring(1).Split('y').Select(int.Parse).ToList();
+                    gridMines[coord[0],coord[1]] = 'c';
+                    button.IsEnabled = false;
+                    button.Name = "Mogged";
                 }
             }
         }
-
         private void StartGame() {
             MakeGrid();
             AddButtons();
@@ -123,22 +135,17 @@ namespace Minesweeper {
         }
         private void buttonClick(object sender, EventArgs e) {
             Button clicked = (Button)sender;
-            var coord = clicked.Name.Substring(1).Split('e').Select(int.Parse).ToList();
+            var coord = clicked.Name.Substring(1).Split('y').Select(int.Parse).ToList();
             if (gridMines[coord[0],coord[1]].Equals('m')) {
                 EndGame(0);
+                return;
             }
             gridMines[coord[0], coord[1]] = 'c';
-
+            var calced= CalcArea(coord[0], coord[1]);
+            ClearArea(calced);
             if (CheckIfMinesLeft()) {
                 EndGame(1);
             }
-
-            
-            clicked.Content = "Clicked";
-            clicked.IsEnabled = false;
-            ClearArea(coord[0], coord[1]);
-
-
             //MessageBox.Show($"x: {coord[0]} | y: {coord[1]}");
         }
     }
