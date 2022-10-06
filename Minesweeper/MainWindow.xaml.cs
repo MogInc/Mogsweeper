@@ -92,9 +92,9 @@ namespace Minesweeper {
             }
             return buttonNames;
         }
-        private void DecideNextChunkToBeCleared(List<string> potentialTiles) {
-            var b = true;
+        private void DecideNextChunkToBeCleared(List<string> potentialTiles) {           
             foreach (var item in potentialTiles) {
+                var b = true;
                 var coord = item.Substring(1).Split("y").Select(int.Parse).ToList();
                 for (int i = 0; i < coord.Count; i++) {
                     if (coord[i] == 0 || coord[i] >= gridSize - 1) {
@@ -110,6 +110,9 @@ namespace Minesweeper {
         public void ClearArea(List<string> buttonNames) {
             var test = MainGrid.Children.OfType<Button>();           
             foreach (var button in test) {
+                if (button.IsEnabled == false) {
+                    continue;
+                }
                 if (buttonNames.Contains(button.Name)) {
                     var coord = button.Name.Substring(1).Split('y').Select(int.Parse).ToList();
                     gridMines[coord[0],coord[1]] = 'c';
@@ -117,7 +120,10 @@ namespace Minesweeper {
                     button.Name = "Mogged";
                 }
             }
-            //DecideNextChunkToBeCleared(buttonNames);
+            if (buttonNames.Count == 1) {
+                return;
+            }
+            DecideNextChunkToBeCleared(buttonNames);
         }
         private void StartGame() {
             MakeGrid();
