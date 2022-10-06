@@ -22,8 +22,9 @@ namespace Minesweeper {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private int gridSize = 10;
-        private int mineAmount = 1;
+        private int gridSize = 2;
+        private int mineAmount = 3;
+        private bool firstClick = true;
         //gridMines
         //m - mine
         //c - clear
@@ -53,6 +54,7 @@ namespace Minesweeper {
                     button.Click += new RoutedEventHandler(buttonClick);
                     //TODO rightclick to plant flag
                     //TODO prevent where first click is bomb
+                    //TODO add numbers
                     Grid.SetColumn(button, i);
                     Grid.SetRow(button, j);
                     MainGrid.Children.Add(button);
@@ -60,20 +62,22 @@ namespace Minesweeper {
             }
         }
         private void CalculateMines() {
-            gridMines = new char[gridSize, gridSize];
-            Random random = new Random();
+            gridMines = new char[gridSize, gridSize];        
             for (int i = 0; i < mineAmount; i++) {
-                var x = random.Next(gridSize);
-                var y = random.Next(gridSize);
-                if (gridMines[x, y].Equals('m')) {
-                    i--;
-                    continue;
-                } else {
-                    gridMines[x, y] = 'm';
-                }
+                if (!SpawneMine()) i--;
             }
         }
-
+        private bool SpawneMine() {
+            Random random = new Random();
+            var x = random.Next(gridSize);
+            var y = random.Next(gridSize);
+            if (gridMines[x, y].Equals('m')) {
+                return false;
+            } else {
+                gridMines[x, y] = 'm';
+                return true;
+            }
+        }
         private List<string> CalcArea(int x, int y) {
             var xBoxMin = x <= 0 ? 0 : 1;
             var xBoxMax = x >= gridSize-1 ? 0 : 1;
@@ -134,6 +138,7 @@ namespace Minesweeper {
             MainGrid.Children.Clear();
             AddButtons();
             CalculateMines();
+            firstClick = true;
         }
         private void EndGame(int gId) {
             switch (gId) {
@@ -154,12 +159,22 @@ namespace Minesweeper {
             }
             return true;
         }
-        private void MoveMine() { 
-            
+        private void MoveMine(int x, int y) {
+            for (int i = 0; i < 1; i++) {
+                gridMines[x, y] = '\0';
+                if (!SpawneMine()) i--;
+                if (gridMines[x, y] == 'm') i--;
+            }
         }
         private void buttonClick(object sender, EventArgs e) {
             Button clicked = (Button)sender;
             var coord = clicked.Name.Substring(1).Split('y').Select(int.Parse).ToList();
+            if (firstClick) {
+                firstClick = false;
+                if (gridMines[coord[0], coord[1]].Equals('m')) {
+                    MoveMine(coord[0], coord[1]);
+                }
+            }
             if (gridMines[coord[0],coord[1]].Equals('m')) {
                 EndGame(0);
                 return;
