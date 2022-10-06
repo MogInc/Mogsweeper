@@ -22,7 +22,7 @@ namespace Minesweeper {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private int gridSize = 2;
+        private int gridSize = 10;
         private int mineAmount = 1;
         //gridMines
         //m - mine
@@ -85,10 +85,27 @@ namespace Minesweeper {
                     if (gridMines[i, j].Equals('m')) {
                         return new List<string>() {$"x{x}y{y}"};
                     }
-                    buttonNames.Add($"x{i}y{j}");
+                    if (gridMines[i,j] != 'c') {
+                        buttonNames.Add($"x{i}y{j}");
+                    }
                 }
             }
             return buttonNames;
+        }
+        private void DecideNextChunkToBeCleared(List<string> potentialTiles) {
+            var b = true;
+            foreach (var item in potentialTiles) {
+                var coord = item.Substring(1).Split("y").Select(int.Parse).ToList();
+                for (int i = 0; i < coord.Count; i++) {
+                    if (coord[i] == 0 || coord[i] >= gridSize - 1) {
+                        b = false;
+                        break; 
+                    }
+                }
+                if (b) {
+                    ClearArea(CalcArea(coord[0], coord[1]));
+                }
+            }
         }
         public void ClearArea(List<string> buttonNames) {
             var test = MainGrid.Children.OfType<Button>();           
@@ -100,6 +117,7 @@ namespace Minesweeper {
                     button.Name = "Mogged";
                 }
             }
+            //DecideNextChunkToBeCleared(buttonNames);
         }
         private void StartGame() {
             MakeGrid();
@@ -141,8 +159,8 @@ namespace Minesweeper {
                 return;
             }
             gridMines[coord[0], coord[1]] = 'c';
-            var calced= CalcArea(coord[0], coord[1]);
-            ClearArea(calced);
+            clicked.IsEnabled = false;
+            ClearArea(CalcArea(coord[0], coord[1]));
             if (CheckIfMinesLeft()) {
                 EndGame(1);
             }
