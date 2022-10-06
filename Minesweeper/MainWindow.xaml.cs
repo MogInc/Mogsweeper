@@ -78,12 +78,12 @@ namespace Minesweeper {
             var xBoxMin = x <= 0 ? 0 : 1;
             var xBoxMax = x >= gridSize-1 ? 0 : 1;
             var yBoxMin = y <= 0 ? 0 : 1;
-            var yBoxMax = y >= gridSize-1 ? 0 : 1;          
+            var yBoxMax = y >= gridSize-1 ? 0 : 1;
             List<string> buttonNames = new List<string>();
             for (int i = x - xBoxMin; i <= x + xBoxMax; i++) {
                 for (int j = y - yBoxMin; j <= y + yBoxMax; j++) {
                     if (gridMines[i, j].Equals('m')) {
-                        return buttonNames;
+                        return new List<string>() {$"x{x}y{y}"};
                     }
                     buttonNames.Add($"x{i}y{j}");
                 }
