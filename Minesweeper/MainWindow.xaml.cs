@@ -24,8 +24,8 @@ namespace Minesweeper {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private int gridSize = 20;
-        private int mineAmount = 30;
+        private int gridSize = 50;
+        private int mineAmount = 400;
         private bool firstClick = true;
         //gridMines
         //m - mine
@@ -55,7 +55,6 @@ namespace Minesweeper {
                     button.Name = $"x{i}y{j}";
                     button.Click += new RoutedEventHandler(buttonClick);
                     //TODO rightclick to plant flag
-                    //TODO add numbers
                     Grid.SetColumn(button, i);
                     Grid.SetRow(button, j);
                     MainGrid.Children.Add(button);
@@ -77,7 +76,7 @@ namespace Minesweeper {
                 return false;
             } else {
                 gridMines[x, y] = 'm';
-                test.Where(xx => xx.Name.Equals($"x{x}y{y}")).First().Content = "M";
+                //test.Where(xx => xx.Name.Equals($"x{x}y{y}")).First().Content = "M";
                 return true;
             }
         }
